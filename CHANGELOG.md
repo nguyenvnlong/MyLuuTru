@@ -1,28 +1,27 @@
-# Changelog
+# 變更紀錄
 
-## Step 2 - Dark Mode, Filter và checkpoint recovery
+本檔案記錄待辦清單 App 的功能變動。
 
-### Thêm mới
-- Thêm nút chuyển đổi giao diện giữa chế độ sáng và tối.
-- Hiển thị biểu tượng và văn bản trên nút chuyển đổi theme:
-  - sáng: `🌙 Deep Mode`
-  - tối: `☀️ Light Mode`
-- Hỗ trợ theo dõi thiết lập người dùng bằng `localStorage` để giữ nguyên lựa chọn sau khi reload trang.
-- Nếu chưa có lựa chọn thủ công, ứng dụng sẽ tự động áp dụng theo `prefers-color-scheme` của hệ điều hành.
-- Thêm bộ lọc cho danh sách công việc:
-  - Tất cả
-  - Chưa hoàn thành
-  - Đã hoàn thành
-- Khi không có mục nào phù hợp với bộ lọc hiện tại, hiển thị thông báo rỗng tương ứng.
+## [0.2.0] - Step 2
 
-### Cập nhật
-- Giữ nguyên cơ chế CSS variables để quản lý màu sắc theo theme mà không cần hardcode màu ở nhiều nơi.
-- `未完成:N 項` luôn hiển thị tổng số công việc chưa hoàn thành trên toàn bộ danh sách, không bị ảnh hưởng bởi bộ lọc hiện tại.
-- Thêm xử lý hiển thị trạng thái active cho nút filter đang được chọn.
+### 新增
+- **深色模式切換**:標題列右側新增切換按鈕,可在淺色 / 深色之間切換。
+- **記住主題偏好**:選擇會存進 `localStorage`(key:`workshop-theme`),重新整理後仍維持。
+- **跟隨系統設定**:使用者若從未手動切換過,會自動採用作業系統的深淺色偏好(`prefers-color-scheme`)。
+- **篩選功能**:新增「全部 / 未完成 / 已完成」三個篩選按鈕。
+- **情境化空狀態文字**:依目前篩選條件顯示不同提示(例如「太棒了,沒有未完成的事項!」)。
 
-### Khôi phục checkpoint
-- Thực hành khôi phục trạng thái checkpoint bằng cách thực hiện commit trống để lưu mốc thời gian của bước 2 trên GitHub.
-- Xác nhận quy trình commit và push để đồng bộ mã nguồn lên repository.
+### 變更
+- 色彩全面改用 CSS 變數(`--bg`、`--surface`、`--text` 等),方便主題切換。
+- 「未完成:N 項」的統計不受篩選條件影響,永遠反映整體數量。
 
-### Ghi chú
-- Phần này được ghi lại để theo dõi tiến độ của Step 2 và làm căn cứ cho các bước sau.
+## [0.1.0] - Step 1
+
+### 新增
+- 建立待辦清單 App 的基本結構(`index.html`、`styles.css`、`app.js`)。
+- 新增待辦事項。
+- 勾選標記完成 / 取消完成。
+- 刪除待辦事項。
+- 顯示未完成項目數量。
+- 資料存入 `localStorage`,重新整理不會消失。
+- 置中版面與基本 RWD。
