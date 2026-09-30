@@ -1,0 +1,226 @@
+:root {
+  --page-background: #eef4f1;
+  --card-background: #ffffff;
+  --text-primary: #20332e;
+  --text-secondary: #70817b;
+  --text-muted: #a2b0ab;
+  --accent: #287d6b;
+  --accent-dark: #1e6556;
+  --accent-soft: #e2f1ec;
+  --border: #dfe9e5;
+  --shadow: 0 20px 55px rgba(35, 72, 62, 0.12);
+  --radius-large: 24px;
+  --radius-small: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 32px 16px;
+  color: var(--text-primary);
+  background:
+    radial-gradient(circle at top left, rgba(211, 235, 225, 0.9), transparent 34%),
+    var(--page-background);
+  font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+.todo-card {
+  width: min(100%, 520px);
+  margin: 5vh auto 0;
+  padding: clamp(24px, 6vw, 40px);
+  background: var(--card-background);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow);
+}
+
+.todo-header {
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 2.75rem);
+  letter-spacing: 0.02em;
+}
+
+.subtitle {
+  margin: 10px 0 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.todo-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.todo-form input {
+  min-width: 0;
+  flex: 1;
+  padding: 13px 16px;
+  color: var(--text-primary);
+  background: #f7faf8;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.todo-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.todo-form input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.todo-form button {
+  padding: 0 20px;
+  color: #ffffff;
+  background: var(--accent);
+  border-radius: var(--radius-small);
+  font-weight: 700;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.todo-form button:hover {
+  background: var(--accent-dark);
+}
+
+.todo-form button:active {
+  transform: translateY(1px);
+}
+
+.todo-list {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px 12px;
+  background: #fbfdfc;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  animation: item-in 220ms ease-out both;
+}
+
+.todo-checkbox {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.todo-text {
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.todo-item.is-completed .todo-text {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.delete-button {
+  padding: 7px 8px;
+  color: var(--text-secondary);
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.delete-button:hover {
+  color: #b34e4e;
+  background: #fff0ef;
+}
+
+.empty-state {
+  padding: 28px 12px;
+  margin: 0;
+  color: var(--text-secondary);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.todo-footer {
+  padding-top: 22px;
+  margin-top: 12px;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 420px) {
+  body {
+    padding: 16px 12px;
+  }
+
+  .todo-card {
+    margin-top: 2vh;
+  }
+
+  .todo-form button {
+    padding: 0 15px;
+  }
+}
