@@ -27,3 +27,7 @@
 - 需保證專案仍可在純 HTML / CSS / 原生 JavaScript 的條件下離線運行。
 - 不得引入任何不必要的依賴或額外檔案。
 - 任何修改都應保持與專案既有設計風格一致。
+## 5. Quy tắc bổ sung về chất lượng Code (Strict Coding Rules)
+- **Khai báo biến**: Tuyệt đối KHÔNG sử dụng `var`. Bắt buộc dùng `const` đối me các hằng số và `let` đối với biến có thay đổi giá trị.
+- **Chú thích hàm (JSDoc)**: Mọi hàm JavaScript mới hoặc hàm được chỉnh sửa đều phải viết chú thích JSDoc phía trên (`/** ... */`) để giải thích rõ vai trò, các tham số đầu vào và giá trị trả về.
+- **Responsive Design**: Mọi chỉnh sửa CSS trong `styles.css` phải đảm bảo giao diện hiển thị chuẩn xác trên cả màn hình di động (Mobile RWD).
