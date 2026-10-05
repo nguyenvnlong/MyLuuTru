@@ -1,35 +1,27 @@
-# Changelog
+# 變更紀錄
 
-## [Unreleased]
-
-### Features
-- Added a dark mode toggle with local storage persistence and OS-level theme fallback.
-- Added filter buttons for All, Active, and Completed views.
-- Improved empty-state messaging so filtered lists clearly explain that hidden items are not deleted.
-
-### Bug Fixes
-- Fixed the issue where unchecking a completed task while in the Completed filter caused the item to disappear without feedback. (Issue #3)
-- Clarified empty-state copy for filtered results to help users understand that tasks are hidden by the current filter, not removed. (PR #5)
+本檔案記錄待辦清單 App 的功能變動。
 
 ## [0.2.0] - Step 2
 
-### Features
-- Added dark mode switching from the header.
-- Saved the selected theme in `localStorage`.
-- Followed the operating system preference when no manual theme was chosen.
-- Added the All / Active / Completed filter buttons.
-- Added contextual empty-state messages for different filters.
+### 新增
+- **深色模式切換**:標題列右側新增切換按鈕,可在淺色 / 深色之間切換。
+- **記住主題偏好**:選擇會存進 `localStorage`(key:`workshop-theme`),重新整理後仍維持。
+- **跟隨系統設定**:使用者若從未手動切換過,會自動採用作業系統的深淺色偏好(`prefers-color-scheme`)。
+- **篩選功能**:新增「全部 / 未完成 / 已完成」三個篩選按鈕。
+- **情境化空狀態文字**:依目前篩選條件顯示不同提示(例如「太棒了,沒有未完成的事項!」)。
 
-### Bug Fixes
-- Improved the user experience when a filter produced no items by communicating that the item was hidden by the filter, not deleted.
+### 變更
+- 色彩全面改用 CSS 變數(`--bg`、`--surface`、`--text` 等),方便主題切換。
+- 「未完成:N 項」的統計不受篩選條件影響,永遠反映整體數量。
 
 ## [0.1.0] - Step 1
 
-### Features
-- Created the base to-do app structure in `index.html`, `styles.css`, and `app.js`.
-- Added task creation.
-- Added task completion toggling.
-- Added task deletion.
-- Added remaining-item count.
-- Saved data to `localStorage` so tasks remain after refresh.
-- Added the basic centered layout and responsive styling.
+### 新增
+- 建立待辦清單 App 的基本結構(`index.html`、`styles.css`、`app.js`)。
+- 新增待辦事項。
+- 勾選標記完成 / 取消完成。
+- 刪除待辦事項。
+- 顯示未完成項目數量。
+- 資料存入 `localStorage`,重新整理不會消失。
+- 置中版面與基本 RWD。
