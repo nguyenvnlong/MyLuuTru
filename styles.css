@@ -6,6 +6,7 @@
   --subtle-text: #62708a;
   --primary-color: #2563eb;
   --primary-soft: #dbeafe;
+  --focus-ring: rgba(37, 99, 235, 0.15);
   --input-bg: #ffffff;
   --button-text: #ffffff;
   --button-hover: #1d4ed8;
@@ -31,6 +32,7 @@ html[data-theme="dark"] {
   --subtle-text: #cbd5e1;
   --primary-color: #60a5fa;
   --primary-soft: rgba(96, 165, 250, 0.18);
+  --focus-ring: rgba(96, 165, 250, 0.2);
   --input-bg: #111827;
   --button-text: #e2e8f0;
   --button-hover: #93c5fd;
@@ -171,6 +173,31 @@ h1 {
 }
 
 .todo-form input::placeholder {
+  color: var(--subtle-text);
+}
+
+.todo-search {
+  margin-bottom: 14px;
+}
+
+.todo-search input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.todo-search input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.todo-search input::placeholder {
   color: var(--subtle-text);
 }
 

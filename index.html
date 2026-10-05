@@ -33,9 +33,14 @@
       <button type="submit">新增</button>
     </form>
 
+    <div class="todo-search">
+      <label class="sr-only" for="todo-search-input">搜尋待辦事項</label>
+      <input id="todo-search-input" type="search" placeholder="搜尋待辦事項..." autocomplete="off">
+    </div>
+
     <nav class="todo-filters" aria-label="待辦事項篩選" role="group">
       <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">全部</button>
-      <button class="filter-button" type="button" data-filter="active" aria-pressed="false">未完成</button>
+      <button class="filter-button" type="button" data-filter="active" aria-pressed="false">正在做</button>
       <button class="filter-button" type="button" data-filter="completed" aria-pressed="false">已完成</button>
     </nav>
 

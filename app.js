@@ -7,11 +7,13 @@ const emptyState = document.querySelector("#empty-state");
 const remainingCount = document.querySelector("#remaining-count");
 const form = document.querySelector("#todo-form");
 const input = document.querySelector("#todo-input");
+const searchInput = document.querySelector("#todo-search-input");
 const themeToggle = document.querySelector("#theme-toggle");
 const filterButtons = document.querySelectorAll(".filter-button");
 
 let todos = loadTodos();
 let currentFilter = "all";
+let searchQuery = "";
 
 // 讀取待辦事項，若沒有資料就回傳空陣列
 function loadTodos() {
@@ -28,16 +30,23 @@ function saveTodos() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
 
-// 依據目前篩選條件，回傳可顯示的待辦清單
+/**
+ * 依據目前狀態與搜尋文字，回傳可顯示的待辦清單。
+ * @returns {Array<{id: number, text: string, completed: boolean}>} 符合條件的待辦事項
+ */
 function getVisibleTodos() {
-  switch (currentFilter) {
-    case "active":
-      return todos.filter((todo) => !todo.completed);
-    case "completed":
-      return todos.filter((todo) => todo.completed);
-    default:
-      return todos;
-  }
+  const normalizedQuery = searchQuery.toLocaleLowerCase();
+
+  return todos.filter((todo) => {
+    const matchesFilter = currentFilter === "active"
+      ? !todo.completed
+      : currentFilter === "completed"
+        ? todo.completed
+        : true;
+    const matchesSearch = todo.text.toLocaleLowerCase().includes(normalizedQuery);
+
+    return matchesFilter && matchesSearch;
+  });
 }
 
 // 取得目前主題：若使用者沒有手動設定，就跟隨作業系統設定
@@ -107,7 +116,10 @@ function updateFilterButtons() {
   });
 }
 
-// 渲染待辦事項，並在篩選後為空時顯示對應文字
+/**
+ * 渲染符合搜尋與篩選條件的待辦事項，並更新空清單提示。
+ * @returns {void} 不回傳值
+ */
 function renderTodos() {
   const visibleTodos = getVisibleTodos();
   list.replaceChildren();
@@ -121,7 +133,9 @@ function renderTodos() {
       completed: "目前沒有已完成的待辦事項。這些項目只是被篩選條件隱藏，並沒有被刪除。",
     };
 
-    emptyState.textContent = emptyMessages[currentFilter] || emptyMessages.all;
+    emptyState.textContent = searchQuery
+      ? "找不到符合搜尋條件的待辦事項。"
+      : emptyMessages[currentFilter] || emptyMessages.all;
   } else {
     emptyState.hidden = true;
   }
@@ -166,6 +180,15 @@ function renderTodos() {
   updateFilterButtons();
 }
 
+/**
+ * 更新搜尋條件並重新渲染待辦清單。
+ * @returns {void} 不回傳值
+ */
+function handleSearchInput() {
+  searchQuery = searchInput.value.trim();
+  renderTodos();
+}
+
 // 新增待辦事項
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -195,6 +218,8 @@ filterButtons.forEach((button) => {
     renderTodos();
   });
 });
+
+searchInput.addEventListener("input", handleSearchInput);
 
 initTheme();
 renderTodos();
