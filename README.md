@@ -3,68 +3,67 @@
 [![HTML5](https://img.shields.io/badge/HTML5-markup-orange?logo=html5&logoColor=white)](https://developer.mozilla.org/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-styles-blue?logo=css3&logoColor=white)](https://developer.mozilla.org/docs/Web/CSS)
 [![Vanilla JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-yellow?logo=javascript&logoColor=black)](https://developer.mozilla.org/docs/Web/JavaScript)
-[![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)](#-ch%E1%BA%A1y-d%E1%BB%B1-%C3%A1n-%E1%BB%9F-local)
+[![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)](#-run-locally)
 
-[![🚀 Live Demo](https://img.shields.io/badge/🚀-Live%20Demo-2563eb?style=for-the-badge)](https://www.google.com/search?q=https%3A%2F%2F%3Cthay-link-github-pages-cua-ban-vao-day%3E)
+[![🚀 Live Demo](https://img.shields.io/badge/🚀-Live%20Demo-2563eb?style=for-the-badge)](https://nguyenvnlong.github.io/MyLuuTru/)
 
-> **Lưu ý:** Hãy thay liên kết Live Demo ở trên bằng URL GitHub Pages sau khi triển khai dự án.
+## ✨ Overview
 
-## ✨ Giới thiệu
+**MyLuuTru** is an **offline-first** task management app for capturing and tracking to-dos directly in your browser. Tasks and preferences are stored locally with the LocalStorage API, so no backend is required.
 
-**MyLuuTru** là ứng dụng quản lý công việc theo hướng **Offline-First**, giúp bạn ghi lại và theo dõi các việc cần làm ngay trên trình duyệt. Dữ liệu được lưu cục bộ bằng LocalStorage, nên có thể sử dụng mà không cần backend.
+The app currently supports light and dark themes, task filters, priority levels, and due dates. **Real-time search is planned but is not yet available.**
 
-Ứng dụng hiện hỗ trợ giao diện sáng/tối, lọc công việc, mức độ ưu tiên và thời hạn. **Tìm kiếm thời gian thực là tính năng dự kiến, chưa được triển khai trong phiên bản hiện tại.**
+## 🧰 Skills & Tech Stack
 
-## 🧰 Kỹ năng & công nghệ
-
-| Công nghệ / kỹ năng | Ứng dụng |
+| Technology / skill | Application |
 | --- | --- |
-| **HTML5** | Cấu trúc biểu mẫu và danh sách công việc |
-| **CSS3** | Giao diện responsive, chủ đề sáng/tối và nhãn ưu tiên |
-| **Vanilla JavaScript (ES6+)** | Xử lý tương tác và cập nhật giao diện |
-| **LocalStorage API** | Lưu công việc và tùy chọn giao diện trên trình duyệt |
-| **GitHub Copilot Agent Mode** | Hỗ trợ quy trình phát triển và chỉnh sửa mã |
-| **Model Context Protocol (MCP)** | Kết nối công cụ trong quy trình làm việc với AI |
+| **HTML5** | Semantic structure for forms and task lists |
+| **CSS3** | Responsive styling, light/dark themes, and priority badges |
+| **Vanilla JavaScript (ES6+)** | App interactions, task parsing, and dynamic rendering |
+| **LocalStorage API** | Persists tasks and theme preferences in the browser |
+| **GitHub Copilot Agent Mode** | AI-assisted development and code editing |
+| **Model Context Protocol (MCP)** | Connects tools to AI-assisted workflows |
 
-## ✅ Tính năng chính
+## ✅ Features
 
-- ➕ Thêm và xóa công việc.
-- ☑️ Đánh dấu công việc đã hoàn thành hoặc chưa hoàn thành.
-- 🎚️ Lọc danh sách theo tất cả, chưa hoàn thành hoặc đã hoàn thành.
-- 🚦 Chọn mức độ ưu tiên **Cao**, **Trung bình** hoặc **Thấp**, với nhãn màu trực quan.
-- 📅 Đặt **thời hạn (Due Date)** cho từng công việc.
-- 💾 Tự động lưu danh sách bằng LocalStorage để giữ dữ liệu khi tải lại trang.
-- 🌗 Chuyển đổi giao diện sáng/tối và ghi nhớ lựa chọn.
-- 📱 Bố cục responsive cho màn hình nhỏ.
-- 🔎 **Tìm kiếm thời gian thực — dự kiến bổ sung; hiện chưa có trong ứng dụng.**
+- ➕ Create and delete tasks.
+- ☑️ Mark tasks as complete or incomplete.
+- 🎚️ Filter tasks by all, active, or completed status.
+- 🚦 Set **High**, **Medium**, or **Low** priority with color-coded badges.
+- 📅 Assign a **due date** to each task.
+- ✨ Parse natural-language task descriptions offline with **AI Smart Task**, then review and edit the results before adding.
+- 💾 Automatically persist tasks in LocalStorage, including across page reloads.
+- 🌗 Switch between light and dark themes; remember the selected preference.
+- 📱 Use a responsive layout on mobile screens.
+- 🔎 **Real-time search — planned; not yet implemented.**
 
-## 🏁 Chạy dự án ở local
+## 🏁 Run Locally
 
-Không cần cài đặt thư viện hoặc công cụ build.
+No dependencies or build tools are required.
 
-1. Tải xuống hoặc clone repository:
+1. Clone the repository:
 
    ```bash
    git clone https://github.com/nguyenvnlong/MyLuuTru.git
    ```
 
-2. Mở thư mục `MyLuuTru`.
-3. Mở `index.html` trực tiếp trong trình duyệt.
+2. Open the `MyLuuTru` folder.
+3. Open `index.html` directly in your browser.
 
-Bạn cũng có thể chạy một máy chủ tĩnh local từ thư mục dự án:
+Alternatively, start a local static server from the project folder:
 
 ```bash
 py -m http.server 8000
 ```
 
-Sau đó truy cập [http://localhost:8000](http://localhost:8000).
+Then visit [http://localhost:8000](http://localhost:8000).
 
-## 🗂️ Cấu trúc thư mục
+## 🗂️ Project Structure
 
 ```text
 MyLuuTru/
-├── index.html   # Cấu trúc trang và biểu mẫu
-├── styles.css   # Giao diện, chủ đề và responsive
-├── app.js       # Tương tác, lưu trữ và hiển thị công việc
-└── README.md    # Tài liệu dự án
+├── index.html   # Page structure and forms
+├── styles.css   # Styling, themes, and responsive layout
+├── app.js       # Task interactions, parsing, and LocalStorage
+└── README.md    # Project documentation
 ```
