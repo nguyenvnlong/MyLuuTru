@@ -7,6 +7,8 @@ const emptyState = document.querySelector("#empty-state");
 const remainingCount = document.querySelector("#remaining-count");
 const form = document.querySelector("#todo-form");
 const input = document.querySelector("#todo-input");
+const priorityInput = document.querySelector("#todo-priority");
+const dueDateInput = document.querySelector("#todo-due-date");
 const themeToggle = document.querySelector("#theme-toggle");
 const filterButtons = document.querySelectorAll(".filter-button");
 
@@ -107,7 +109,10 @@ function updateFilterButtons() {
   });
 }
 
-// 渲染待辦事項，並在篩選後為空時顯示對應文字
+/**
+ * 渲染待辦事項及優先程度、到期日，並更新空清單提示。
+ * @returns {void}
+ */
 function renderTodos() {
   const visibleTodos = getVisibleTodos();
   list.replaceChildren();
@@ -146,6 +151,33 @@ function renderTodos() {
     text.className = "todo-text";
     text.textContent = todo.text;
 
+    const content = document.createElement("div");
+    content.className = "todo-content";
+    content.append(text);
+
+    const priority = ["high", "medium", "low"].includes(todo.priority) ? todo.priority : "medium";
+    const priorityLabels = {
+      high: "高優先",
+      medium: "中優先",
+      low: "低優先",
+    };
+    const metadata = document.createElement("div");
+    metadata.className = "todo-metadata";
+
+    const priorityBadge = document.createElement("span");
+    priorityBadge.className = `priority-badge priority-${priority}`;
+    priorityBadge.textContent = priorityLabels[priority];
+    metadata.append(priorityBadge);
+
+    if (todo.dueDate) {
+      const dueDate = document.createElement("span");
+      dueDate.className = "todo-due-date";
+      dueDate.textContent = `到期日：${todo.dueDate}`;
+      metadata.append(dueDate);
+    }
+
+    content.append(metadata);
+
     const deleteButton = document.createElement("button");
     deleteButton.className = "delete-button";
     deleteButton.type = "button";
@@ -157,7 +189,7 @@ function renderTodos() {
       renderTodos();
     });
 
-    item.append(checkbox, text, deleteButton);
+    item.append(checkbox, content, deleteButton);
     list.append(item);
   });
 
@@ -166,8 +198,12 @@ function renderTodos() {
   updateFilterButtons();
 }
 
-// 新增待辦事項
-form.addEventListener("submit", (event) => {
+/**
+ * 驗證並儲存表單中的新待辦事項。
+ * @param {SubmitEvent} event 表單送出的事件。
+ * @returns {void}
+ */
+function handleFormSubmit(event) {
   event.preventDefault();
 
   const text = input.value.trim();
@@ -180,13 +216,17 @@ form.addEventListener("submit", (event) => {
     id: Date.now(),
     text,
     completed: false,
+    priority: priorityInput.value,
+    dueDate: dueDateInput.value,
   });
 
   saveTodos();
   renderTodos();
   form.reset();
   input.focus();
-});
+}
+
+form.addEventListener("submit", handleFormSubmit);
 
 // 篩選按鈕點擊事件
 filterButtons.forEach((button) => {

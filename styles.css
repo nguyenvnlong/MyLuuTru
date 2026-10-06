@@ -21,6 +21,12 @@
   --danger-hover: #e2e8f0;
   --checkbox-border: rgba(148, 163, 184, 0.7);
   --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+  --priority-high-bg: #fee2e2;
+  --priority-high-text: #b91c1c;
+  --priority-medium-bg: #fef3c7;
+  --priority-medium-text: #b45309;
+  --priority-low-bg: #dcfce7;
+  --priority-low-text: #15803d;
 }
 
 html[data-theme="dark"] {
@@ -46,6 +52,12 @@ html[data-theme="dark"] {
   --danger-hover: #475569;
   --checkbox-border: rgba(148, 163, 184, 0.5);
   --shadow: 0 22px 60px rgba(2, 6, 23, 0.7);
+  --priority-high-bg: rgba(248, 113, 113, 0.18);
+  --priority-high-text: #fca5a5;
+  --priority-medium-bg: rgba(251, 191, 36, 0.18);
+  --priority-medium-text: #fcd34d;
+  --priority-low-bg: rgba(74, 222, 128, 0.18);
+  --priority-low-text: #86efac;
 }
 
 * {
@@ -77,7 +89,8 @@ html[data-theme="dark"] body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -148,13 +161,14 @@ h1 {
 }
 
 .todo-form {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
   gap: 12px;
   margin-bottom: 18px;
 }
 
-.todo-form input {
-  flex: 1;
+.todo-form input,
+.todo-form select {
   min-width: 0;
   border: 1px solid var(--card-border);
   border-radius: 12px;
@@ -165,9 +179,14 @@ h1 {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.todo-form input:focus {
+.todo-form input:focus,
+.todo-form select:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.todo-form #todo-input {
+  grid-column: 1 / -1;
 }
 
 .todo-form input::placeholder {
@@ -270,6 +289,45 @@ h1 {
   transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
+.todo-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.todo-metadata {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  font-size: 0.8rem;
+}
+
+.priority-badge {
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.priority-high {
+  background: var(--priority-high-bg);
+  color: var(--priority-high-text);
+}
+
+.priority-medium {
+  background: var(--priority-medium-bg);
+  color: var(--priority-medium-text);
+}
+
+.priority-low {
+  background: var(--priority-low-bg);
+  color: var(--priority-low-text);
+}
+
+.todo-due-date {
+  color: var(--subtle-text);
+}
+
 .todo-item.is-completed .todo-text {
   color: var(--subtle-text);
   text-decoration: line-through;
@@ -327,11 +385,11 @@ h1 {
   }
 
   .todo-form {
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
   .todo-form button {
-    width: 100%;
+    grid-column: 1 / -1;
     min-height: 44px;
   }
 

@@ -30,6 +30,14 @@
         autocomplete="off"
         maxlength="120"
       >
+      <label class="sr-only" for="todo-priority">優先程度</label>
+      <select id="todo-priority" name="priority">
+        <option value="high">高優先</option>
+        <option value="medium" selected>中優先</option>
+        <option value="low">低優先</option>
+      </select>
+      <label class="sr-only" for="todo-due-date">到期日</label>
+      <input id="todo-due-date" name="dueDate" type="date">
       <button type="submit">新增</button>
     </form>
 
