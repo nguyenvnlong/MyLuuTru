@@ -9,6 +9,9 @@ const form = document.querySelector("#todo-form");
 const input = document.querySelector("#todo-input");
 const priorityInput = document.querySelector("#todo-priority");
 const dueDateInput = document.querySelector("#todo-due-date");
+const smartTaskForm = document.querySelector("#smart-task-form");
+const smartTaskInput = document.querySelector("#smart-task-input");
+const smartTaskStatus = document.querySelector("#smart-task-status");
 const themeToggle = document.querySelector("#theme-toggle");
 const filterButtons = document.querySelectorAll(".filter-button");
 
@@ -107,6 +110,232 @@ function updateFilterButtons() {
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
   });
+}
+
+/**
+ * 將文字轉為不含重音的形式，並保留字元對應的原文索引。
+ * @param {string} value 要正規化的文字。
+ * @returns {{ text: string, starts: number[], ends: number[] }} 正規化文字及原文索引。
+ */
+function normalizeWithIndexes(value) {
+  let normalizedText = "";
+  const starts = [];
+  const ends = [];
+
+  for (let index = 0; index < value.length;) {
+    const character = String.fromCodePoint(value.codePointAt(index));
+    const endIndex = index + character.length;
+    const normalizedCharacter = character
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/đ/g, "d");
+
+    for (const normalizedLetter of normalizedCharacter) {
+      normalizedText += normalizedLetter;
+      starts.push(index);
+      ends.push(endIndex);
+    }
+
+    index = endIndex;
+  }
+
+  return { text: normalizedText, starts, ends };
+}
+
+/**
+ * 尋找正規化文字中的符合片段，並換算回原文位置。
+ * @param {{ text: string, starts: number[], ends: number[] }} normalized 已正規化的文字。
+ * @param {RegExp} pattern 要搜尋的規則。
+ * @returns {{ match: RegExpMatchArray, start: number, end: number } | null} 符合片段，若無則回傳 null。
+ */
+function findOriginalMatch(normalized, pattern) {
+  const match = normalized.text.match(pattern);
+  if (!match || match.index === undefined) {
+    return null;
+  }
+
+  const lastIndex = match.index + match[0].length - 1;
+  return {
+    match,
+    start: normalized.starts[match.index],
+    end: normalized.ends[lastIndex],
+  };
+}
+
+/**
+ * 將有效日期轉為當地時區的 YYYY-MM-DD 格式。
+ * @param {number} year 年份。
+ * @param {number} month 月份，範圍為 1 至 12。
+ * @param {number} day 日期。
+ * @returns {string | null} ISO 日期；若日期無效則回傳 null。
+ */
+function toLocalDateString(year, month, day) {
+  const date = new Date(year, month - 1, day);
+  if (
+    year < 1000
+    || date.getFullYear() !== year
+    || date.getMonth() !== month - 1
+    || date.getDate() !== day
+  ) {
+    return null;
+  }
+
+  const monthText = String(month).padStart(2, "0");
+  const dayText = String(day).padStart(2, "0");
+  return `${year}-${monthText}-${dayText}`;
+}
+
+/**
+ * 依相對日期、星期或數字日期辨識到期日。
+ * @param {{ text: string, starts: number[], ends: number[] }} normalized 已正規化的文字。
+ * @param {Date} today 當地時區的今天日期。
+ * @returns {{ dueDate: string, start: number, end: number } | null} 到期日及日期片段位置。
+ */
+function parseDueDate(normalized, today) {
+  const absoluteDate = findOriginalMatch(
+    normalized,
+    /\b(\d{4})-(\d{1,2})-(\d{1,2})\b|\b(\d{1,2})[./-](\d{1,2})[./-](\d{4})\b/,
+  );
+
+  if (absoluteDate) {
+    const { match } = absoluteDate;
+    const year = Number(match[1] || match[6]);
+    const month = Number(match[2] || match[5]);
+    const day = Number(match[3] || match[4]);
+    const dueDate = toLocalDateString(year, month, day);
+    if (dueDate) {
+      const datePrefix = findOriginalMatch(
+        normalized,
+        /\bngay\s+(?=\d{1,2}[./-]\d{1,2}[./-]\d{4}\b)/,
+      );
+      return {
+        dueDate,
+        start: datePrefix ? datePrefix.start : absoluteDate.start,
+        end: absoluteDate.end,
+      };
+    }
+  }
+
+  const relativeDate = findOriginalMatch(
+    normalized,
+    /\bngay\s+(hom nay|mai|mot|kia)\b|\bhom nay\b|\bmai\b/,
+  );
+  if (relativeDate) {
+    const phrase = relativeDate.match[0];
+    const offset = /\bmai\b/.test(phrase) ? 1 : /\b(mot|kia)\b/.test(phrase) ? 2 : 0;
+    const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + offset);
+    return {
+      dueDate: toLocalDateString(date.getFullYear(), date.getMonth() + 1, date.getDate()),
+      start: relativeDate.start,
+      end: relativeDate.end,
+    };
+  }
+
+  const weekday = findOriginalMatch(
+    normalized,
+    /\bthu\s*(2|3|4|5|6|7|hai|ba|tu|nam|sau|bay)\b|\bchu\s+nhat\b/,
+  );
+  if (weekday) {
+    const weekdayNames = { hai: 1, ba: 2, tu: 3, nam: 4, sau: 5, bay: 6 };
+    const weekdayToken = weekday.match[1];
+    const targetDay = weekdayToken === undefined
+      ? 0
+      : /^\d$/.test(weekdayToken)
+        ? Number(weekdayToken) - 1
+        : weekdayNames[weekdayToken];
+    const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const dayOffset = (targetDay - todayDate.getDay() + 7) % 7;
+    const date = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate() + dayOffset);
+    return {
+      dueDate: toLocalDateString(date.getFullYear(), date.getMonth() + 1, date.getDate()),
+      start: weekday.start,
+      end: weekday.end,
+    };
+  }
+
+  return null;
+}
+
+/**
+ * 從越南文或不含重音符號的句子擷取工作名稱、優先程度及到期日。
+ * @param {string} sentence 使用者輸入的句子。
+ * @param {Date} [today] 當天日期，可供測試時指定。
+ * @returns {{ text: string, priority: string, dueDate: string }} 分析後的欄位。
+ */
+function parseSmartTask(sentence, today = new Date()) {
+  const normalized = normalizeWithIndexes(sentence);
+  const removals = [];
+  let priority = "medium";
+  let dueDate = "";
+
+  const priorityMatch = findOriginalMatch(
+    normalized,
+    /\b(?:muc do uu tien|do uu tien|uu tien|priority)\s+(cao|high|trung binh|medium|thap|low)\b|\b(cao|high|trung binh|medium|thap|low)\s+(?:uu tien|priority)\b/,
+  );
+  if (priorityMatch) {
+    const priorityWord = priorityMatch.match[1] || priorityMatch.match[2];
+    const normalizedPriority = priorityWord.replace(/\s+/g, " ");
+    priority = ["cao", "high"].includes(normalizedPriority)
+      ? "high"
+      : ["thap", "low"].includes(normalizedPriority)
+        ? "low"
+        : "medium";
+    removals.push(priorityMatch);
+  }
+
+  const dateMatch = parseDueDate(normalized, today);
+  if (dateMatch) {
+    dueDate = dateMatch.dueDate;
+    removals.push(dateMatch);
+
+    const timeMatch = findOriginalMatch(
+      normalized,
+      /\b(?:luc\s*)?\d{1,2}\s*(?:h(?:\s*\d{1,2})?|gio(?:\s*\d{1,2})?)(?:\s*(?:sang|chieu|toi|trua))?\b|\b\d{1,2}:\d{2}\s*(?:sang|chieu|toi|trua)?\b/,
+    );
+    if (timeMatch) {
+      removals.push(timeMatch);
+    }
+  }
+
+  let text = sentence;
+  removals.sort((first, second) => second.start - first.start);
+  for (const { start, end } of removals) {
+    text = `${text.slice(0, start)} ${text.slice(end)}`;
+  }
+  text = text.replace(/\s+/g, " ").replace(/^[\s,;:.-]+|[\s,;:.-]+$/g, "");
+
+  return { text, priority, dueDate };
+}
+
+/**
+ * 將分析結果填入工作表單，供使用者確認或修改。
+ * @param {SubmitEvent} event AI 智慧任務表單的送出事件。
+ * @returns {void}
+ */
+function handleSmartTaskSubmit(event) {
+  event.preventDefault();
+
+  const sentence = smartTaskInput.value.trim();
+  if (!sentence) {
+    smartTaskInput.focus();
+    return;
+  }
+
+  const parsedTask = parseSmartTask(sentence);
+  if (!parsedTask.text) {
+    smartTaskStatus.textContent = "找不到任務名稱，請輸入想完成的事項。";
+    return;
+  }
+
+  input.value = parsedTask.text;
+  priorityInput.value = parsedTask.priority;
+  dueDateInput.value = parsedTask.dueDate;
+
+  const priorityLabels = { high: "高", medium: "中", low: "低" };
+  const dueDateMessage = parsedTask.dueDate ? `，到期日 ${parsedTask.dueDate}` : "，未辨識到日期";
+  smartTaskStatus.textContent = `已填入表單：${parsedTask.text}｜${priorityLabels[parsedTask.priority]}優先${dueDateMessage}。請確認後按「新增」。`;
+  input.focus();
 }
 
 /**
@@ -227,6 +456,7 @@ function handleFormSubmit(event) {
 }
 
 form.addEventListener("submit", handleFormSubmit);
+smartTaskForm.addEventListener("submit", handleSmartTaskSubmit);
 
 // 篩選按鈕點擊事件
 filterButtons.forEach((button) => {

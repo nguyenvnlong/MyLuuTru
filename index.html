@@ -20,6 +20,25 @@
       <p class="subtitle">把今天重要的事，一件一件完成。</p>
     </header>
 
+    <section class="smart-task" aria-labelledby="smart-task-title">
+      <h2 id="smart-task-title">✨ AI 智慧任務</h2>
+      <p class="smart-task-description">輸入自然語句，離線辨識任務、優先程度與日期；分析後可修改再新增。</p>
+      <form class="smart-task-form" id="smart-task-form">
+        <label class="sr-only" for="smart-task-input">自然語句</label>
+        <input
+          id="smart-task-input"
+          name="smartTask"
+          type="text"
+          placeholder="例如：Nộp bài tập lúc 8h tối mai ưu tiên cao"
+          autocomplete="off"
+          maxlength="200"
+          required
+        >
+        <button type="submit">解析並填入</button>
+      </form>
+      <p class="smart-task-status" id="smart-task-status" role="status" aria-live="polite"></p>
+    </section>
+
     <form class="todo-form" id="todo-form">
       <label class="sr-only" for="todo-input">新增待辦事項</label>
       <input
